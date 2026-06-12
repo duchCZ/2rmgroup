@@ -1,51 +1,43 @@
-import { Anton } from "next/font/google";
-
-const anton = Anton({ weight: "400", subsets: ["latin"] });
+/* eslint-disable @next/next/no-img-element */
 
 interface LogoProps {
   className?: string;
   size?: "sm" | "md" | "lg" | "xl";
+  /** Use the white-text variant for dark backgrounds (default). */
   dark?: boolean;
+  priority?: boolean;
 }
 
-const sizes = {
-  sm: "text-3xl",
-  md: "text-5xl",
-  lg: "text-7xl",
-  xl: "text-9xl",
+// Logo artwork is 801 × 276 (≈ 2.9 : 1). Size = rendered height in px.
+const heights: Record<NonNullable<LogoProps["size"]>, number> = {
+  sm: 28,
+  md: 42,
+  lg: 68,
+  xl: 116,
 };
 
-const stripeSizes = {
-  sm: { width: "w-1.5", gap: "gap-1", padding: "py-0.5" },
-  md: { width: "w-2", gap: "gap-1.5", padding: "py-0.5" },
-  lg: { width: "w-3", gap: "gap-2", padding: "py-1" },
-  xl: { width: "w-4", gap: "gap-2.5", padding: "py-1.5" },
-};
-
-export function Logo({ className = "", size = "lg", dark = true }: LogoProps) {
-  const textColor = dark ? "text-white" : "text-[#111]";
-  const s = stripeSizes[size];
+export function Logo({
+  className = "",
+  size = "lg",
+  dark = true,
+  priority = false,
+}: LogoProps) {
+  const height = heights[size];
+  const width = Math.round((height * 801) / 276);
+  const src = dark ? "/2rm-logo-white.svg" : "/2rm-logo.svg";
 
   return (
-    <div className={`flex items-center select-none ${className}`}>
-      <span
-        className={`${anton.className} ${sizes[size]} ${textColor} leading-none tracking-tight`}
-      >
-        2RM
-      </span>
-      <div
-        className={`flex ${s.gap} ml-2 self-stretch ${s.padding}`}
-        aria-hidden
-      >
-        <div
-          className={`${s.width} bg-[#F5C200] rounded-[2px]`}
-          style={{ transform: "skewX(-8deg)" }}
-        />
-        <div
-          className={`${s.width} bg-[#62BAE8] rounded-[2px]`}
-          style={{ transform: "skewX(-8deg)" }}
-        />
-      </div>
-    </div>
+    <img
+      src={src}
+      alt="2RM Group"
+      width={width}
+      height={height}
+      className={`select-none ${className}`}
+      style={{ height, width: "auto" }}
+      decoding="async"
+      loading={priority ? "eager" : "lazy"}
+      fetchPriority={priority ? "high" : "auto"}
+      draggable={false}
+    />
   );
 }

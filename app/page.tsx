@@ -11,7 +11,7 @@ export default async function Home() {
     <main className="flex flex-col min-h-screen bg-background text-foreground">
       {/* Hero */}
       <section className="flex flex-col items-center justify-center flex-1 px-6 pt-24 pb-12">
-        <Logo size="xl" dark className="mb-4" />
+        <Logo size="xl" dark priority className="mb-4" />
         <p className="text-muted-foreground text-xs tracking-[0.3em] uppercase mt-2 mb-1">
           Group
         </p>
