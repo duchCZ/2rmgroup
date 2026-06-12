@@ -6,6 +6,13 @@ import { getDb } from "./db";
 import * as schema from "./db/schema";
 
 export const auth = betterAuth({
+  // Origins allowed to call the auth API (CSRF protection). Includes the custom
+  // domain, its apex, and the Vercel deployment URLs.
+  trustedOrigins: [
+    "https://www.2rmgroup.cz",
+    "https://2rmgroup.cz",
+    "https://2rmgroup.vercel.app",
+  ],
   database: drizzleAdapter(getDb(), {
     provider: "pg",
     schema: {
