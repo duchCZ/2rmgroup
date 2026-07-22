@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      # Spadne na high/critical zranitelnosti v závislostech.
+      - run: npm audit --audit-level=high
+      # Build s dummy env — Neon klient chce connection string i při
+      # sbírání page dat; reálné spojení se při buildu nenavazuje.
+      - run: npm run build
+        env:
+          DATABASE_URL: postgresql://user:pass@ep-dummy.eu-central-1.aws.neon.tech/neondb?sslmode=require
+          BETTER_AUTH_SECRET: dummy-ci-secret
